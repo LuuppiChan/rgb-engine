@@ -1,7 +1,7 @@
 # rgb-engine
 An RGB effect engine for Wooting 60HE.
 # Examples
-Examples can be found inside the library and here's also a link to the folder with them. There are currently 2 examples: Pink Ripple, Flappy Bird.
+Examples can be found inside the library and [here's](https://github.com/LuuppiChan/rgb-engine/tree/main/src/processes) also a link to the folder with them. There are currently 2 examples: [Pink Ripple](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/pink_ripple.rs), [Flappy Bird](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/flappy_bird/game.rs).
 
 Here's also a simple wave example built from ground up:
 ```rust
