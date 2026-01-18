@@ -1,5 +1,12 @@
 # rgb-engine
 An RGB effect engine for Wooting 60HE.
+
+# Installing
+Add the following to your dependencies:
+```toml
+rgb-engine = { git = "https://github.com/LuuppiChan/rgb-engine.git" }
+```
+
 # Examples
 Examples can be found inside the library and [here's](https://github.com/LuuppiChan/rgb-engine/tree/main/src/processes) also a link to the folder with them. There are currently 2 examples: [Pink Ripple](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/pink_ripple.rs), [Flappy Bird](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/flappy_bird/game.rs).
 

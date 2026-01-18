@@ -13,6 +13,7 @@ tween = "2.1.0"
 # I'll add this when they update the submodule for it to work again.
 # For now I'll just use a custom version of it.
 # wooting-rgb = "0.3.5"
-wooting-rgb = { path = "/home/luuppi/git-apps/Wooting-RGB/wooting-rgb/" }
+# For now this points to my fork of the crate since upstream hasn't yet merged my pull request
+wooting-rgb = { git = "https://github.com/LuuppiChan/Wooting-RGB.git" }
 wooting-analog-wrapper = { git = "https://github.com/WootingKb/wooting-analog-sdk" }
 ringbuffer = "0.16.0"
