@@ -77,6 +77,8 @@ impl Process for WaveProcess {
 ## Flappy Bird
 - Space: Jump
 - Esc: Reset/Exit
+
+
 https://github.com/user-attachments/assets/3102dd82-1323-48ed-8640-8149546beb9e
 
 # Info
