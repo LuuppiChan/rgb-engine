@@ -75,7 +75,7 @@ impl Process for WaveProcess {
 }
 ```
 ## Flappy Bird
-todo
+https://github.com/LuuppiChan/rgb-engine/raw/refs/heads/main/example-stuff/keyboard-flappy-bird.mp4
 
 # Info
 This is a hobby project and as such I don't currently have any plans on supporting any other keyboards officially. But with a bit of tinkering it could maybe be done. But for a first time hobby project this is enough tinkering already for now.
