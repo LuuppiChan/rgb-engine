@@ -82,6 +82,6 @@ impl Process for WaveProcess {
 https://github.com/user-attachments/assets/3102dd82-1323-48ed-8640-8149546beb9e
 
 # Info
-This is a hobby project and as such I don't currently have any plans on supporting any other keyboards officially. But with a bit of tinkering it could maybe be done and pull requests are welcome. But for a first time hobby project this is enough tinkering for me for now.
+This is a hobby project and as such I don't currently have any plans on supporting any other keyboards officially. But with a bit of tinkering it could likely be done. But for a first time hobby project this is enough tinkering for me for now.
 
 Also this assumes my custom fn layout if you're going to use any key events. Check my config out: `045a0673980efcf95b5f5b6c959eb63b0f9f`
