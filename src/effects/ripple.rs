@@ -5,6 +5,7 @@ use palette::Srgb;
 
 use crate::{effect::Effect, keyboard::DeltaWatcher};
 
+/// Ripple effect using the key press events from DeltaWatcher
 pub struct Ripple {
     /// In case you want to clone this key_delta instance
     pub delta_watcher: DeltaWatcher,
@@ -46,7 +47,7 @@ impl Ripple {
         for (key, mat_key) in self.delta_watcher.get_pressed_keys_mat_keys() {
             if key.just_pressed() {
                 self.ripples.push(RippleEvent {
-                    origin: mat_key.pos_norm,
+                    origin: mat_key.pos_norm_aspect,
                     start_time: time,
                 });
             }

@@ -126,12 +126,12 @@ impl FlappyBird {
                 pipe_gap_size: 1.7,
                 spawn_interval: 3.0,
                 pipe_position_multiplier: 1.0,
-                pipe_start_offset: 2.0,
-                death_offset_from_bottom: 0.4,
+                pipe_start_offset: 3.0,
+                death_offset_from_bottom: -0.75,
                 bird_color: Srgb::new(1.0, 1.0, 1.0),
                 bird_color_death_animation: Srgb::new(1.0, 0.0, 0.0),
                 pipe_color: Srgb::new(0.0, 1.0, 0.0),
-                bird_spawn_pos: Vector2::new(-0.4, 0.0),
+                bird_spawn_pos: Vector2::new(-0.2, 0.0),
                 score_color: Srgb::new(1.0, 1.0, 1.0),
                 pipe_spawn_y_offset: -0.4,
             },
@@ -151,7 +151,7 @@ impl FlappyBird {
 
             if bird
                 .bounds
-                .contains(key.pos_norm.rotate(RotateDirection::AntiClockWise))
+                .contains(key.pos_norm_aspect.rotate(RotateDirection::AntiClockWise))
             {
                 key.color = self.world.bird.current_color;
                 key.color_blend_type = ColorBlendTypes::Mask;
@@ -166,7 +166,7 @@ impl FlappyBird {
             for pipe in self.world.pipes.iter() {
                 if pipe
                     .bounds
-                    .contains(key.pos_norm.rotate(RotateDirection::AntiClockWise))
+                    .contains(key.pos_norm_aspect.rotate(RotateDirection::AntiClockWise))
                 {
                     key.color = self.config.pipe_color;
                     key.color_blend_type = ColorBlendTypes::Mask;
@@ -288,13 +288,13 @@ impl Process for FlappyBird {
             move |runtime, process| {
                 let elapsed = runtime.start.elapsed().as_secs_f64();
                 for key in runtime.get_layer(-2).as_flattened_mut() {
-                    if key.pos_norm.x < -1.2 {
-                        key.color = process.grass.color(elapsed, key.pos_norm) * 0.3;
+                    if key.pos_norm_aspect.x < -1.2 {
+                        key.color = process.grass.color(elapsed, key.pos_norm_aspect) * 0.3;
                     }
                 }
                 for key in runtime.get_layer(-1).as_flattened_mut() {
-                    if key.pos_norm.x >= -1.2 {
-                        key.color = process.sky.color(elapsed, key.pos_norm) * 0.05;
+                    if key.pos_norm_aspect.x >= -1.2 {
+                        key.color = process.sky.color(elapsed, key.pos_norm_aspect) * 0.05;
                     }
                 }
                 true

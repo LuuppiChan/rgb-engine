@@ -48,11 +48,11 @@ impl Process for PinkRipple {
         runtime.create_timer(Duration::from_millis(50), false, move |runtime, process| {
             let elapsed = runtime.start.elapsed().as_secs_f64();
             for key in runtime.get_layer(0).as_flattened_mut() {
-                key.color = process.background.color(elapsed, key.pos_norm);
+                key.color = process.background.color(elapsed, key.pos_norm_aspect);
             }
 
             for key in runtime.get_layer(1).as_flattened_mut() {
-                key.color = process.ripple.color(elapsed, key.pos_norm);
+                key.color = process.ripple.color(elapsed, key.pos_norm_aspect);
             }
 
             runtime.update_keyboard();
