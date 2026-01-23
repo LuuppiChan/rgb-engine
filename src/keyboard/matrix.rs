@@ -4,7 +4,7 @@ use nalgebra::Vector2;
 
 use crate::{key::Key, processes::flappy_bird::Bounds};
 
-pub type KeyboardMatrix = [[Key; 14]; 5];
+pub type KeyboardMatrix = [[Key; 21]; 6];
 
 pub const W60HE_KEYS: [(u8, u8); 62] = [
     ESC,
@@ -294,7 +294,7 @@ pub fn compute_bounds(matrix: &KeyboardMatrix) -> Bounds {
 
 /// Get the full keyboard matrix where every position is included with key data
 pub fn get_matrix() -> KeyboardMatrix {
-    let mut matrix = [[Key::default(); 14]; 5];
+    let mut matrix = [[Key::default(); 21]; 6];
     let min: Vector2<f64> = Vector2::new(0.0, 0.0);
     let max: Vector2<f64> = Vector2::new(14.0, 4.0);
     let size = max - min;
