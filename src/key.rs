@@ -8,6 +8,9 @@ pub struct Key {
     pub physical_position: Vector2<f64>,
     /// Normalized position based on physical_position
     pub pos_norm: Vector2<f64>,
+    /// Normalized and aspect ratio corrected position of this key.
+    /// x values range over 1
+    pub pos_norm_aspect: Vector2<f64>,
     pub color: Srgb<f64>,
     pub color_blend_type: ColorBlendTypes,
 }

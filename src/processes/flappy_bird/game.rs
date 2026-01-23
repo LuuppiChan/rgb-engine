@@ -228,16 +228,16 @@ impl FlappyBird {
         }
         for digit in digits {
             let position = match digit {
-                '0' => &mut layer[0][10],
-                '1' => &mut layer[0][1],
-                '2' => &mut layer[0][2],
-                '3' => &mut layer[0][3],
-                '4' => &mut layer[0][4],
-                '5' => &mut layer[0][5],
-                '6' => &mut layer[0][6],
-                '7' => &mut layer[0][7],
-                '8' => &mut layer[0][8],
-                '9' => &mut layer[0][9],
+                '0' => &mut layer[1][10],
+                '1' => &mut layer[1][1],
+                '2' => &mut layer[1][2],
+                '3' => &mut layer[1][3],
+                '4' => &mut layer[1][4],
+                '5' => &mut layer[1][5],
+                '6' => &mut layer[1][6],
+                '7' => &mut layer[1][7],
+                '8' => &mut layer[1][8],
+                '9' => &mut layer[1][9],
                 _ => unreachable!(),
             };
             position.color = self.config.score_color;
