@@ -1,7 +1,7 @@
 # rgb-engine
 An RGB effect engine for Wooting 60HE.
 
-Other Wooting keyboards may also work, but expect undefined behaviour. **Especially with DeltaWatcher!** That has some hardcoded translation values from scancodes to positions based on my layout. (Please let me know if you know a better solution. Open an issue or something.)
+Other Wooting keyboards may also work, but expect undefined behaviour. **Especially with DeltaWatcher!** (Analog and reactive effects such as ripple) DeltaWatcher has some hardcoded translation values from scancodes to positions based on my layout. (Please let me know if you know a better solution. Open an issue or something.)
 
 # Installing
 Add the following to your dependencies in Cargo.toml:
