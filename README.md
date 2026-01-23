@@ -12,6 +12,7 @@ rgb-engine = { git = "https://github.com/LuuppiChan/rgb-engine.git" }
 # Examples
 Examples can be found inside the library and [here's](https://github.com/LuuppiChan/rgb-engine/tree/main/src/processes) also a link to the folder with them. There are currently 2 examples: [Pink Ripple](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/pink_ripple.rs), [Flappy Bird](https://github.com/LuuppiChan/rgb-engine/blob/main/src/processes/flappy_bird/game.rs).
 
+## Simple RGB Wave
 Here's also a simple wave example built from ground up (should work on any Wooting keyboard):
 ```rust
 use std::time::Duration;
@@ -76,9 +77,27 @@ impl Process for WaveProcess {
     }
 }
 ```
+## Pink Ripple (the example effect)
+```rust
+use rgb_engine::{examples::PinkRipple, runtime::Runtime};
+
+fn main() {
+    Runtime::new(true).run(&mut PinkRipple::default());
+}
+```
+
 ## Flappy Bird
 - Space: Jump
 - Esc: Reset/Exit
+
+How to run:
+```rust
+use rgb_engine::examples::flappy_bird::run_flappy_bird;
+
+fn main() {
+    run_flappy_bird();
+}
+```
 
 
 https://github.com/user-attachments/assets/3102dd82-1323-48ed-8640-8149546beb9e
