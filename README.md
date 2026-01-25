@@ -107,4 +107,4 @@ This is a hobby project and as such I don't currently have any plans on supporti
 
 Also this assumes my custom fn layout if you're going to use any key events. Check my config out: `045a0673980efcf95b5f5b6c959eb63b0f9f`
 
-Lastly I must mention that I love Rust.
+Lastly I'm obligated to mention that I love Rust.
