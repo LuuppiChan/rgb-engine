@@ -32,6 +32,9 @@ pub struct Runtime<T: Process<Owner = Self>> {
     pub start: Instant,
     /// Delta watcher you can copy for other things
     pub delta_watcher: Option<DeltaWatcher>,
+    /// Delta since last frame.
+    /// This is for when you cannot access it from process. Like in a timer or tweener.
+    pub delta: Duration,
     exit: bool,
     tweeners: Vec<StandardTweenerData<T>>,
     timers: Vec<Rc<RefCell<Timer<T>>>>,
@@ -53,6 +56,7 @@ impl<T: Process<Owner = Self>> Runtime<T> {
             start: Instant::now(),
             effect_layers: HashMap::new(),
             keyboard: RgbKeyboard,
+            delta: Duration::ZERO,
         }
     }
 
@@ -85,6 +89,7 @@ impl<T: Process<Owner = Self>> Runtime<T> {
         loop {
             let now = Instant::now();
             let delta = now.duration_since(last);
+            self.delta = delta;
             last = now;
 
             let mut tweeners = self.tweeners.clone();

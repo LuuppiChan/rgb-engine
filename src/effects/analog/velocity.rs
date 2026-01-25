@@ -3,7 +3,7 @@ use std::sync::atomic::Ordering::Relaxed;
 use lerp::num_traits::Signed;
 use palette::{Srgb, num::ClampAssign};
 
-use crate::{effect::Effect, keyboard::DeltaWatcher};
+use crate::{effect::Effect, effects::analog::KeyFilter, keyboard::DeltaWatcher};
 
 #[derive(Default)]
 pub enum VelocityType {
@@ -28,6 +28,7 @@ pub struct Velocity {
     pub intensity: f64,
     /// What should trigger the velocity
     pub velocity_type: VelocityType,
+    pub filter: KeyFilter,
 }
 
 impl Velocity {
@@ -42,6 +43,7 @@ impl Velocity {
             area,
             intensity,
             velocity_type,
+            filter: KeyFilter::All,
         }
     }
 }
@@ -53,6 +55,19 @@ impl Effect for Velocity {
         let mut intensity = 0.0;
 
         for (key, mat_key) in pressed_keys {
+            match &self.filter {
+                KeyFilter::All => (),
+                KeyFilter::Included(items) => {
+                    if !items.contains(&key.key) {
+                        continue;
+                    }
+                }
+                KeyFilter::Excluded(items) => {
+                    if items.contains(&key.key) {
+                        continue;
+                    }
+                }
+            }
             if mat_key.pos_norm.metric_distance(&pos_norm) < self.area {
                 let delta = key.delta_average.load(Relaxed);
                 let delta = match self.velocity_type {

@@ -3,10 +3,7 @@ use std::{sync::atomic::Ordering::Relaxed, time::Duration};
 use nalgebra::Vector2;
 use palette::{Srgb, num::ClampAssign};
 
-use crate::{
-    effect::Effect,
-    keyboard::DeltaWatcher,
-};
+use crate::{effect::Effect, effects::analog::KeyFilter, keyboard::DeltaWatcher};
 
 pub struct LocalPressBrightness {
     /// In case you want to clone this.
@@ -15,6 +12,7 @@ pub struct LocalPressBrightness {
     pub area: f64,
     /// Subtract from full brightness instead of adding to zero brightness.
     pub inverted: bool,
+    pub filter: KeyFilter,
 }
 
 impl LocalPressBrightness {
@@ -23,6 +21,7 @@ impl LocalPressBrightness {
             delta_watcher,
             area,
             inverted,
+            filter: KeyFilter::All,
         }
     }
 }
@@ -32,7 +31,20 @@ impl Effect for LocalPressBrightness {
         let pressed = self.delta_watcher.get_pressed_keys_mat_keys();
         let mut intensity = 0.0;
         for (key, key_pos) in pressed {
-            if pos_norm.metric_distance(&key_pos.pos_norm) < self.area {
+            match &self.filter {
+                KeyFilter::All => (),
+                KeyFilter::Included(items) => {
+                    if !items.contains(&key.key) {
+                        continue;
+                    }
+                }
+                KeyFilter::Excluded(items) => {
+                    if items.contains(&key.key) {
+                        continue;
+                    }
+                }
+            }
+            if pos_norm.metric_distance(&key_pos.pos_norm_aspect) < self.area {
                 intensity += key.distance.load(Relaxed) as f64 / 255.0;
             }
         }

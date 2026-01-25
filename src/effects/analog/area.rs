@@ -2,10 +2,7 @@ use std::sync::atomic::Ordering::Relaxed;
 
 use palette::{Srgb, num::ClampAssign};
 
-use crate::{
-    effect::Effect,
-    keyboard::DeltaWatcher,
-};
+use crate::{effect::Effect, effects::analog::KeyFilter, keyboard::DeltaWatcher};
 
 /// Lights up keys around the pressed key based on how down it's pressed.
 pub struct Area {
@@ -15,6 +12,7 @@ pub struct Area {
     pub area: f64,
     /// How much should the key light up when it's affected by one area.
     pub brightness: f64,
+    pub filter: KeyFilter,
 }
 
 impl Area {
@@ -23,6 +21,7 @@ impl Area {
             delta_watcher,
             area,
             brightness,
+            filter: KeyFilter::All,
         }
     }
 }
@@ -33,7 +32,20 @@ impl Effect for Area {
 
         let mut intensity = 0.0;
         for (key, mat_key) in pressed {
-            if mat_key.pos_norm.metric_distance(&pos_norm)
+            match &self.filter {
+                KeyFilter::All => (),
+                KeyFilter::Included(items) => {
+                    if !items.contains(&key.key) {
+                        continue;
+                    }
+                }
+                KeyFilter::Excluded(items) => {
+                    if items.contains(&key.key) {
+                        continue;
+                    }
+                }
+            }
+            if mat_key.pos_norm_aspect.metric_distance(&pos_norm)
                 < self.area * (key.distance.load(Relaxed) as f64 / 255.0)
             {
                 intensity += self.brightness;

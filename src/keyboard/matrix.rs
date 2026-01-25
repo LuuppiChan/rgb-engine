@@ -391,5 +391,5 @@ pub const LEFT_ALT: (u8, u8) = (5, 2);
 pub const SPACE: (u8, u8) = (5, 6);
 pub const RIGHT_ALT: (u8, u8) = (5, 10);
 pub const RIGHT_MOD: (u8, u8) = (5, 11);
-pub const FN: (u8, u8) = (5, 12);
-pub const RIGHT_CONTROL: (u8, u8) = (5, 13);
+pub const RIGHT_CONTROL: (u8, u8) = (5, 12);
+pub const FN: (u8, u8) = (5, 13);
