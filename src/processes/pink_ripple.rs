@@ -1,7 +1,8 @@
 use std::{sync::atomic::Ordering::Relaxed, thread::sleep, time::Duration};
 
 use lerp::{Lerp, num_traits::Zero};
-use palette::Srgb;
+use palette::{Clamp, Srgb};
+use tween::{Linear, Tweener};
 
 use crate::{
     effect::Effect,
@@ -133,6 +134,8 @@ impl Process for PinkRipple {
             ele.color_blend_type = ColorBlendTypes::Sub;
         }
         runtime.create_layer(150, layer);
+
+        runtime.create_layer(-100, fn_layer);
         self.fn_key = (
             fn_layer[5][13],
             delta_watcher
@@ -153,23 +156,44 @@ impl Process for PinkRipple {
                 key.color = process.ripple.color(elapsed, key.pos_norm_aspect);
             }
 
-            for key in runtime.get_layer(200).as_flattened_mut() {
-                if key
+            for i in 0..runtime.get_layer(200).as_flattened().len() {
+                if runtime.get_layer(200).as_flattened_mut()[i]
                     .pos_norm_aspect
                     .metric_distance(&process.fn_key.0.pos_norm_aspect)
                     < process.current_revealed * MAX_REVEALED
                 {
-                    key.color_blend_type = ColorBlendTypes::Mask;
+                    if runtime.get_layer(200).as_flattened_mut()[i].color_blend_type
+                        == ColorBlendTypes::Nothing
+                    {
+                        runtime.get_layer(200).as_flattened_mut()[i].color =
+                            Srgb::new(0.0, 0.0, 0.0);
+                        runtime.create_tween(
+                            Tweener::new(0.0, 1.0, 0.003, Box::new(Linear)),
+                            move |r, _p, v| {
+                                let other = r.get_layer(-100).as_flattened_mut()[i];
+                                let key = &mut r.get_layer(200).as_flattened_mut()[i];
+
+                                key.color = key.color.lerp(other.color, v);
+
+                                key.color_blend_type == ColorBlendTypes::Mask
+                            },
+                            |_r, _p, _v| {},
+                        );
+                    }
+                    runtime.get_layer(200).as_flattened_mut()[i].color_blend_type =
+                        ColorBlendTypes::Mask;
                 } else {
-                    key.color_blend_type = ColorBlendTypes::Nothing;
+                    runtime.get_layer(200).as_flattened_mut()[i].color_blend_type =
+                        ColorBlendTypes::Nothing;
                 }
             }
 
             let delta = runtime.delta.as_secs_f64();
             for key in runtime.get_layer(150).as_flattened_mut() {
-                key.color = key
-                    .color
-                    .lerp(process.brightness.color(0.0, key.pos_norm_aspect), delta * 10.0);
+                key.color = key.color.lerp(
+                    process.brightness.color(0.0, key.pos_norm_aspect),
+                    delta * 10.0,
+                );
             }
 
             runtime.update_keyboard();

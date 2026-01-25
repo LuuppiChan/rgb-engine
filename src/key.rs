@@ -27,7 +27,7 @@ impl Key {
 }
 
 #[allow(dead_code)]
-#[derive(Default, Debug, Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub enum ColorBlendTypes {
     /// Adds this color to the layer. `render_key.color += key.color`
     /// Good for a first background layer.
