@@ -168,7 +168,7 @@ impl Process for PinkRipple {
                         runtime.get_layer(200).as_flattened_mut()[i].color =
                             Srgb::new(0.0, 0.0, 0.0);
                         runtime.create_tween(
-                            Tweener::new(0.0, 1.0, 0.003, Box::new(Linear)),
+                            Tweener::new(0.0, 1.0, 0.400, Box::new(Linear)),
                             move |r, _p, v| {
                                 let other = r.get_layer(-100).as_flattened_mut()[i];
                                 let key = &mut r.get_layer(200).as_flattened_mut()[i];

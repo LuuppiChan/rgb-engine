@@ -94,7 +94,7 @@ impl<T: Process<Owner = Self>> Runtime<T> {
 
             let mut tweeners = self.tweeners.clone();
             tweeners.retain(|(tweener, callback, finished)| {
-                let value = tweener.borrow_mut().move_by(last.elapsed().as_secs_f64());
+                let value = tweener.borrow_mut().move_by(delta.as_secs_f64());
                 let retain = callback(self, process, value);
                 if let Some(finished) = finished
                     && tweener.borrow().is_finished()
