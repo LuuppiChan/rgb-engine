@@ -18,6 +18,7 @@ const MAX_REVEALED: f64 = 5.0;
 const FN_FADE_IN_TIME: f64 = 0.200;
 const RIPPLE_LAYER: i32 = 100;
 const BETWEEN_MAIN_FN: f64 = 0.5;
+const ANIMATION_SMOOTHENING: f64 = 1.5;
 
 fn main() {
     Runtime::new(true).run(&mut PinkRipple::default());
@@ -204,7 +205,7 @@ impl Process for PinkRipple {
 
         self.current_revealed = self.current_revealed.lerp(
             self.fn_key.1.distance.load(Relaxed) as f64 / 255.0,
-            delta.as_secs_f64() * 2.0,
+            delta.as_secs_f64() * ANIMATION_SMOOTHENING,
         ) - 0.001;
         self.current_revealed = self.current_revealed.clamp(0.0, 1.0);
 
