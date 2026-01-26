@@ -1,7 +1,7 @@
 use nalgebra::Vector2;
 
-use crate::processes::flappy_bird::bounds;
-
+/// A rectangle which can be used as a collider or as a mesh for effects.
+/// Used in flappy bird as such.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Bounds {
     pub position: Vector2<f64>,
@@ -25,19 +25,5 @@ impl Bounds {
 
     pub fn center(&self) -> Vector2<f64> {
         self.position + self.size * 0.5
-    }
-
-    pub fn rotated_90(&self) -> Self {
-        panic!("This is shit");
-
-        #[allow(unreachable_code)]
-        let center = self.center();
-
-        let new_size = Vector2::new(self.size.y, -self.size.x);
-
-        Bounds {
-            position: center - new_size * 0.5,
-            size: new_size,
-        }
     }
 }

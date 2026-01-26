@@ -1,38 +1,28 @@
 use std::time::Duration;
 
-use lerp::Lerp;
 use nalgebra::Vector2;
-use palette::{Srgb, num::ClampAssign};
+use palette::Srgb;
 use rand::{Rng, rng, rngs::ThreadRng};
-use tween::{Linear, Tweener};
 
-use crate::{
-    effect::Effect,
+use rgb_engine::{
+    Bounds, Effect,
     effects::perlin::{Direction, PerlinWave},
-    key::{self, ColorBlendTypes},
     keyboard::{
         DeltaWatcher, KeyboardMatrix, get_matrix,
         matrix::{self, ESC, SPACE, compute_bounds},
     },
-    process::{Process, Runtime, StandardTweener},
-    processes::flappy_bird::Bounds,
+    runtime::{ColorBlendTypes, Process, Runtime},
 };
+
+fn main() {
+    Runtime::new(true).run(&mut FlappyBird::new());
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum GameState {
     MainMenu,
     Playing,
     Dead,
-}
-
-enum Axis {
-    X,
-    Y,
-}
-
-struct GameSpace {
-    up_axis: Axis,
-    right_axis: Axis,
 }
 
 struct GameConfig {
@@ -63,7 +53,6 @@ struct Bird {
     bounds: Bounds,
     velocity: Vector2<f64>,
     current_color: Srgb<f64>,
-    alive: bool,
 }
 
 struct Pipe {
@@ -112,7 +101,6 @@ impl FlappyBird {
                         size: Vector2::new(0.4, 0.4),
                     },
                     velocity: Vector2::new(0.0, 0.0),
-                    alive: true,
                     current_color: Srgb::new(0.0, 0.0, 0.0),
                 },
                 pipes: Vec::new(),
@@ -401,11 +389,6 @@ impl Process for FlappyBird {
         {
             self.world.bird.velocity.y = 0.0;
         }
-        // println!(
-        //     "Bird: {} ground: {}",
-        //     self.world.bird.bounds.position.y,
-        //     -self.world.bounds.position.x + self.config.death_offset_from_bottom
-        // );
 
         self.apply_bird_velocity(delta.as_secs_f64());
         self.render_bird(runtime.get_layer(1));
@@ -426,6 +409,7 @@ impl Rotate for Vector2<f64> {
     }
 }
 
+#[allow(dead_code)]
 enum RotateDirection {
     ClockWise,
     AntiClockWise,

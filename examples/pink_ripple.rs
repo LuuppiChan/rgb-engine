@@ -1,27 +1,28 @@
 use std::{sync::atomic::Ordering::Relaxed, thread::sleep, time::Duration};
 
-use lerp::{Lerp, num_traits::Zero};
-use palette::{Clamp, Srgb};
-use tween::{Linear, Tweener};
-
-use crate::{
-    effect::Effect,
+use lerp::Lerp;
+use palette::Srgb;
+use rgb_engine::{
+    Effect,
     effects::{
         Ripple,
         analog::{Area, KeyFilter, LocalPressBrightness},
         perlin::{Direction, PerlinWave},
     },
-    key::{ColorBlendTypes, Key},
-    keyboard::{
-        DeltaWatcher, KeyDelta, get_matrix,
-        matrix::{FN, RIGHT_CONTROL},
-    },
-    process::{Process, Runtime},
+    keyboard::{DeltaWatcher, KeyDelta, get_matrix, matrix::FN},
+    runtime::{ColorBlendTypes, Key, Process, Runtime},
 };
+use tween::{Linear, Tweener};
 
-const MAX_REVEALED: f64 = 4.0;
+const MAX_REVEALED: f64 = 5.0;
+const FN_FADE_IN_TIME: f64 = 0.200;
+const RIPPLE_LAYER: i32 = 100;
+const BETWEEN_MAIN_FN: f64 = 0.5;
 
-/// My favourite effect recreated with even better colour changes and ripple.
+fn main() {
+    Runtime::new(true).run(&mut PinkRipple::default());
+}
+
 pub struct PinkRipple {
     pub background: PerlinWave,
     pub ripple: Ripple,
@@ -66,7 +67,7 @@ impl Process for PinkRipple {
         for ele in layer.as_flattened_mut() {
             ele.color_blend_type = ColorBlendTypes::Mult;
         }
-        runtime.create_layer(100, layer);
+        runtime.create_layer(RIPPLE_LAYER, layer);
         runtime.create_layer(0, get_matrix());
         let fn_layer = {
             let red = Srgb::new(1.0, 0.0, 0.0);
@@ -152,28 +153,25 @@ impl Process for PinkRipple {
                 key.color = process.background.color(elapsed, key.pos_norm_aspect);
             }
 
-            for key in runtime.get_layer(100).as_flattened_mut() {
+            for key in runtime.get_layer(RIPPLE_LAYER).as_flattened_mut() {
                 key.color = process.ripple.color(elapsed, key.pos_norm_aspect);
             }
 
             for i in 0..runtime.get_layer(200).as_flattened().len() {
-                if runtime.get_layer(200).as_flattened_mut()[i]
+                let distance_to_fn = runtime.get_layer(200).as_flattened_mut()[i]
                     .pos_norm_aspect
-                    .metric_distance(&process.fn_key.0.pos_norm_aspect)
-                    < process.current_revealed * MAX_REVEALED
-                {
-                    if runtime.get_layer(200).as_flattened_mut()[i].color_blend_type
-                        == ColorBlendTypes::Nothing
-                    {
+                    .metric_distance(&process.fn_key.0.pos_norm_aspect);
+                if distance_to_fn < process.current_revealed * MAX_REVEALED {
+                    if distance_to_fn > process.current_revealed * MAX_REVEALED - BETWEEN_MAIN_FN {
                         runtime.get_layer(200).as_flattened_mut()[i].color =
                             Srgb::new(0.0, 0.0, 0.0);
                         runtime.create_tween(
-                            Tweener::new(0.0, 1.0, 0.400, Box::new(Linear)),
+                            Tweener::new(0.0, 1.0, FN_FADE_IN_TIME, Box::new(Linear)),
                             move |r, _p, v| {
                                 let other = r.get_layer(-100).as_flattened_mut()[i];
                                 let key = &mut r.get_layer(200).as_flattened_mut()[i];
 
-                                key.color = key.color.lerp(other.color, v);
+                                key.color = Srgb::new(0.0, 0.0, 0.0).lerp(other.color, v);
 
                                 key.color_blend_type == ColorBlendTypes::Mask
                             },

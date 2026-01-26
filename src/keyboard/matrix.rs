@@ -1,8 +1,6 @@
-#![allow(dead_code)]
-
 use nalgebra::Vector2;
 
-use crate::{key::Key, processes::flappy_bird::Bounds};
+use crate::{Bounds, key::Key};
 
 pub type KeyboardMatrix = [[Key; 21]; 6];
 
