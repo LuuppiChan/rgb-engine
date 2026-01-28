@@ -58,6 +58,8 @@ pub struct DeltaWatcher {
     pub deltas_in_average: Arc<AtomicU64>,
     /// To stop the delta watcher (true) or not (false).
     pub exit: Arc<AtomicBool>,
+    /// Whether the watcher should be in power save mode or not
+    pub idle: Arc<AtomicBool>,
     pub mat_keys: KeyboardMatrix,
 }
 
@@ -80,6 +82,7 @@ impl DeltaWatcher {
             deltas_in_average: Arc::new(deltas_in_average.into()),
             exit: Arc::new(false.into()),
             mat_keys: get_matrix(),
+            idle: Arc::new(false.into()),
         };
 
         let s = s_ret.clone();
@@ -98,6 +101,7 @@ impl DeltaWatcher {
             deltas_in_average: Default::default(),
             exit: Default::default(),
             mat_keys: get_matrix(),
+            idle: Arc::new(true.into()),
         }
     }
 
@@ -223,6 +227,9 @@ fn delta_watcher(s: DeltaWatcher) {
         }
 
         sleep(Duration::from_nanos(s.scan_delay_ns.load(Relaxed)));
+        if s.idle.load(Relaxed) {
+            sleep(Duration::from_millis(200));
+        }
 
         last = now;
 

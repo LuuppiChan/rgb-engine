@@ -39,6 +39,7 @@ pub struct Runtime<T: Process<Owner = Self>> {
     tweeners: Vec<StandardTweenerData<T>>,
     timers: Vec<Rc<RefCell<Timer<T>>>>,
     effect_layers: HashMap<i32, KeyboardMatrix>,
+    render_layer: KeyboardMatrix,
 }
 
 impl<T: Process<Owner = Self>> Runtime<T> {
@@ -57,6 +58,7 @@ impl<T: Process<Owner = Self>> Runtime<T> {
             effect_layers: HashMap::new(),
             keyboard: RgbKeyboard,
             delta: Duration::ZERO,
+            render_layer: get_matrix(),
         }
     }
 
@@ -177,7 +179,8 @@ impl<T: Process<Owner = Self>> Runtime<T> {
     /// Updates the keyboard rgb array.
     /// This is quite intensive due to keyboard communication. (around 16 ms)
     pub fn update_keyboard(&mut self) {
-        let mut render = get_matrix();
+        let mut render = self.render_layer;
+
         let mut ks = self.effect_layers.keys().copied().collect::<Vec<_>>();
         ks.sort();
 
